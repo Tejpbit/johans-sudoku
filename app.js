@@ -105,7 +105,7 @@ function startCustom(puzzle, label) {
     return false;
   }
   newGame({ kind: 'custom', puzzle, solution: count === 1 ? solution : null, label });
-  if (count > 1) message('More than one solution', 'You can still play it, but mistakes can’t be checked.');
+  if (count > 1) message('More than one solution', 'You can still play it. Any valid filled board counts as solved.');
   return true;
 }
 
@@ -192,7 +192,7 @@ function afterChange() {
 function isWrong(i) {
   if (game.entering || game.givens[i] || !game.values[i]) return false;
   if (settings.mistakes === 'check') return checkedWrong.has(i);
-  return game.solution ? game.values[i] !== game.solution[i] : hasConflict(game.values, i);
+  return hasConflict(game.values, i);
 }
 
 function render() {
@@ -229,7 +229,7 @@ function render() {
   $('btn-undo').disabled = $('btn-enter-undo').disabled = !game.history.length;
   $('btn-redo').disabled = $('btn-enter-redo').disabled = !game.future.length;
   $('btn-check').hidden = settings.mistakes !== 'check';
-  $('btn-check').disabled = !game.solution || game.done;
+  $('btn-check').disabled = game.done;
   timer.show();
 }
 
@@ -400,10 +400,9 @@ $('btn-undo').onclick = $('btn-enter-undo').onclick = undo;
 $('btn-redo').onclick = $('btn-enter-redo').onclick = redo;
 
 $('btn-check').onclick = () => {
-  if (!game.solution) return;
   checkedWrong = new Set();
   for (let i = 0; i < 81; i++) {
-    if (!game.givens[i] && game.values[i] && game.values[i] !== game.solution[i]) checkedWrong.add(i);
+    if (!game.givens[i] && hasConflict(game.values, i)) checkedWrong.add(i);
   }
   render();
   if (!checkedWrong.size) message('All good', 'No mistakes so far.');
