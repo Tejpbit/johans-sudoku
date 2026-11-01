@@ -2,9 +2,90 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
   <title>Johan's Sudoku</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
 </head>
-<body>
+<body class="mode-commit">
+  <header>
+    <div class="title">
+      <span id="puzzle-label">Sudoku</span>
+      <span id="mode-pill"></span>
+    </div>
+    <span id="timer">0:00</span>
+  </header>
+
+  <main>
+    <div id="board" aria-label="Sudoku board"></div>
+  </main>
+
+  <nav class="bar" id="bar-play">
+    <button id="btn-undo" aria-label="Undo">↶<small>Undo</small></button>
+    <button id="btn-redo" aria-label="Redo">↷<small>Redo</small></button>
+    <button id="btn-check" aria-label="Check">✓<small>Check</small></button>
+    <button id="btn-new" aria-label="New game">＋<small>New</small></button>
+    <button id="btn-settings" aria-label="Settings">⚙<small>Settings</small></button>
+  </nav>
+
+  <nav class="bar" id="bar-enter" hidden>
+    <button id="btn-enter-cancel">✕<small>Cancel</small></button>
+    <button id="btn-enter-undo">↶<small>Undo</small></button>
+    <button id="btn-enter-redo">↷<small>Redo</small></button>
+    <button id="btn-enter-start" class="primary">▶<small>Start</small></button>
+  </nav>
+
+  <p id="hint">Tap the background to switch between notes and numbers</p>
+
+  <div id="keypad" hidden></div>
+
+  <dialog id="dlg-new">
+    <form method="dialog">
+      <h2>New game</h2>
+      <div class="grid4">
+        <button value="easy">Easy</button>
+        <button value="medium">Medium</button>
+        <button value="hard">Hard</button>
+        <button value="expert">Expert</button>
+      </div>
+      <button value="daily" class="wide">Daily puzzle <small id="daily-date"></small></button>
+      <button value="enter" class="wide">Enter my own</button>
+      <label for="import-text">Import (81 digits, 0 or . for blanks)</label>
+      <textarea id="import-text" rows="3" spellcheck="false" autocomplete="off"></textarea>
+      <button value="import" class="wide">Import</button>
+      <button value="share" class="wide">Copy link to this puzzle</button>
+      <button value="cancel" class="wide subtle">Close</button>
+    </form>
+  </dialog>
+
+  <dialog id="dlg-settings">
+    <form method="dialog">
+      <h2>Settings</h2>
+      <fieldset>
+        <legend>Erase gesture</legend>
+        <label><input type="radio" name="erase" value="diagonal"> Slide far diagonally</label>
+        <label><input type="radio" name="erase" value="ring"> Release on the outer ring</label>
+      </fieldset>
+      <fieldset>
+        <legend>Mistakes</legend>
+        <label><input type="radio" name="mistakes" value="instant"> Show instantly</label>
+        <label><input type="radio" name="mistakes" value="check"> Only when I press Check</label>
+      </fieldset>
+      <fieldset>
+        <legend>Feel</legend>
+        <label><input type="checkbox" name="haptics"> Vibrate while sliding (Android)</label>
+      </fieldset>
+      <button value="close" class="wide">Done</button>
+    </form>
+  </dialog>
+
+  <dialog id="dlg-message">
+    <form method="dialog">
+      <h2 id="msg-title"></h2>
+      <p id="msg-text"></p>
+      <button value="ok" class="wide">OK</button>
+    </form>
+  </dialog>
 </body>
 </html>
